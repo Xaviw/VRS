@@ -1,65 +1,71 @@
 <template>
-  <div>
-    <img src="../assets/images/banner.jpg" class="container banner" />
-    <el-row type="flex" justify="center" style="margin-top: 20px">
-      <el-input
-        :placeholder="placeholder"
-        v-model.trim="searchKey"
-        class="search"
-        @blur="placeholder = '点击输入医院名称'"
-        @focus="placeholder = ''"
-        @keyup.enter.native="handleSearchHospital()"
-      >
-        <i slot="prefix" class="el-icon-search center"></i>
-        <el-link
-          slot="suffix"
-          type="primary"
-          class="text"
-          @click="handleSearchHospital()"
-          >搜索</el-link
+  <keep-alive>
+    <div>
+      <img src="../assets/images/banner.jpg" class="container banner" />
+      <el-row type="flex" justify="center" style="margin-top: 20px">
+        <el-input
+          :placeholder="placeholder"
+          v-model.trim="searchKey"
+          class="search"
+          @blur="placeholder = '点击输入医院名称'"
+          @focus="placeholder = ''"
+          @keyup.enter.native="handleSearchHospital()"
         >
-      </el-input>
-    </el-row>
-    <div class="container main">
-      <div class="left">
-        <span class="title">{{ hospitalText }}</span>
-        <span class="rank" v-show="!type">等级：</span>
-        <el-radio-group
-          v-show="!type"
-          v-model="grade"
-          @change="handleSearchHospital($event)"
-        >
-          <el-radio-button label="全部"></el-radio-button>
-          <el-radio-button label="三级医院"></el-radio-button>
-          <el-radio-button label="二级医院"></el-radio-button>
-          <el-radio-button label="一级医院"></el-radio-button>
-        </el-radio-group>
-        <div class="list" id="hospitalList" v-show="!type">
-          <Card v-for="item of hospitalList" :key="item.id" :item="item"></Card>
-          <div></div>
-          <div></div>
-          <div></div>
+          <i slot="prefix" class="el-icon-search center"></i>
+          <el-link
+            slot="suffix"
+            type="primary"
+            class="text"
+            @click="handleSearchHospital()"
+            >搜索</el-link
+          >
+        </el-input>
+      </el-row>
+      <div class="container main">
+        <div class="left">
+          <span class="title">{{ hospitalText }}</span>
+          <span class="rank" v-show="!type">等级：</span>
+          <el-radio-group
+            v-show="!type"
+            v-model="grade"
+            @change="handleSearchHospital($event)"
+          >
+            <el-radio-button label="全部"></el-radio-button>
+            <el-radio-button label="三级医院"></el-radio-button>
+            <el-radio-button label="二级医院"></el-radio-button>
+            <el-radio-button label="一级医院"></el-radio-button>
+          </el-radio-group>
+          <div class="list" id="hospitalList" v-show="!type">
+            <Card
+              v-for="item of hospitalList"
+              :key="item.id"
+              :item="item"
+            ></Card>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <AppointmentCard
+            v-for="item of hospitalList"
+            :key="item.id || item.hospitalId"
+            v-show="type"
+            :data="type ? item : []"
+            class="mt-40"
+          ></AppointmentCard>
+          <i id="bottomAnchor"></i>
         </div>
-        <AppointmentCard
-          v-for="item of hospitalList"
-          :key="item.id || item.hospitalId"
-          v-show="type"
-          :data="type ? item : []"
-          class="mt-40"
-        ></AppointmentCard>
-        <i id="bottomAnchor"></i>
-      </div>
-      <div class="right">
-        <InfoList title="每日新闻" :list="newsList"></InfoList>
-        <InfoList
-          class="mt-40"
-          title="科普常识"
-          :list="knowledgeList"
-        ></InfoList>
-        <InfoList class="mt-40" title="公告" :list="noticeList"></InfoList>
+        <div class="right">
+          <InfoList title="每日新闻" :list="newsList"></InfoList>
+          <InfoList
+            class="mt-40"
+            title="科普常识"
+            :list="knowledgeList"
+          ></InfoList>
+          <InfoList class="mt-40" title="公告" :list="noticeList"></InfoList>
+        </div>
       </div>
     </div>
-  </div>
+  </keep-alive>
 </template>
 
 <script>

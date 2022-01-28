@@ -204,7 +204,7 @@ export default {
   align-items: center;
   justify-content: center;
   background-color: rgba($color: #000000, $alpha: 0.5);
-  z-index: 99;
+  z-index: 10002;
 }
 .login-box {
   position: relative;

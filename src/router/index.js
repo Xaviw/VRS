@@ -2,7 +2,7 @@ import { Message } from "element-ui";
 import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "../store";
-import { checkLogin, getTitle } from "../utils/util";
+import { checkLogin, getTitle, gotoIndex } from "../utils/util";
 
 Vue.use(VueRouter);
 
@@ -57,7 +57,12 @@ router.beforeEach(async (to, from, next) => {
     }
     if (!store.state.isLogin) {
       Message.warning("请登录后再访问该页面！");
-      router.back();
+      console.log(from);
+      gotoIndex();
+      // if (from.matched.length) {
+      //   router.back();
+      // } else {
+      // }
       return;
     }
   }

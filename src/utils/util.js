@@ -20,10 +20,13 @@ async function clearLogin() {
   window.local.clear();
   document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   store.commit("modify", { isLogin: false, userInfo: null });
-  console.log(router, router.app.$route);
+  gotoIndex();
+}
+
+async function gotoIndex() {
   if (store.state.isBack) {
     router.app.$router.push("/manage/login");
-  } else if (router.app.$route.meta.needLogin) {
+  } else if (!router.app.$route || router.app.$route.meta.needLogin) {
     router.push("/");
   }
 }
@@ -86,4 +89,12 @@ function getTitle(url) {
   }
 }
 
-export { checkLogin, clearLogin, checkBack, getPosition, location, getTitle };
+export {
+  checkLogin,
+  clearLogin,
+  checkBack,
+  getPosition,
+  location,
+  getTitle,
+  gotoIndex,
+};

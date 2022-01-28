@@ -93,6 +93,16 @@ function getArticle(id) {
   return axios._get(url, { id });
 }
 
+function updateAvatar(data) {
+  const url = "/info/editFace";
+  return axios.post(url, data);
+}
+
+function modifyInfo(data) {
+  const url = "/info/editInfo";
+  return axios.post(url, data);
+}
+
 export {
   login,
   register,
@@ -106,4 +116,6 @@ export {
   getAllNotice,
   searchHospital,
   getArticle,
+  modifyInfo,
+  updateAvatar,
 };
