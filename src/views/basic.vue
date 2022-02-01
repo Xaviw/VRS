@@ -48,7 +48,10 @@
             </el-row>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="handleModifyInfo"
-                >修改信息</el-dropdown-item
+                >修改资料</el-dropdown-item
+              >
+              <el-dropdown-item command="handleOrderInfo"
+                >订单信息</el-dropdown-item
               >
               <el-dropdown-item divided command="handleLogout">
                 退出登录
@@ -84,16 +87,20 @@ export default {
     switchLogin(flag) {
       this.showLogin = flag;
     },
-    handleLogout() {
-      logout().then(() => {
-        clearLogin();
-      });
-    },
-    handleModifyInfo() {
-      this.$router.push("/edit-info");
-    },
     handleMenu(command) {
-      this[command]();
+      switch (command) {
+        case "handleModifyInfo":
+          this.$router.push("/edit-info");
+          break;
+        case "handleOrderInfo":
+          this.$router.push("/order");
+          break;
+        case "handleLogout":
+          logout().then(() => {
+            clearLogin();
+          });
+          break;
+      }
     },
   },
   computed: {

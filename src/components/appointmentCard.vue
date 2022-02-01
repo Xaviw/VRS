@@ -10,7 +10,7 @@
           疫苗介绍：<br />{{ data.vaccineBrief || "无" }}
         </p>
         <p class="notes">注意事项：<br />{{ data.notes || "无" }}</p>
-        <p class="ban">禁止人群：<br />{{ data.ban || "无" }}</p>
+        <p class="ban">禁用人群：<br />{{ data.ban || "无" }}</p>
       </div>
       <div class="right">
         <p>接种地点：<br />{{ data.hospitalName }}</p>

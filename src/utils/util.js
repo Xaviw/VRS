@@ -89,6 +89,10 @@ function getTitle(url) {
   }
 }
 
+function money(val) {
+  return Number(val).toFixed(2).toLocaleString() + "￥";
+}
+
 export {
   checkLogin,
   clearLogin,
@@ -97,4 +101,5 @@ export {
   location,
   getTitle,
   gotoIndex,
+  money,
 };

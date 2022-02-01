@@ -41,7 +41,7 @@ function searchHospital(data) {
               vaccineName: "疫苗名称",
               vaccineBrief:
                 "疫苗介绍疫苗介绍疫苗介绍疫苗介绍疫苗介绍疫苗介绍疫苗介绍",
-              ban: "禁止人群禁止人群禁止人群",
+              ban: "禁用人群禁用人群禁用人群",
               notes:
                 "注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项",
               vaccineSpecId: "2300002123453270296",
@@ -103,6 +103,26 @@ function modifyInfo(data) {
   return axios.post(url, data);
 }
 
+function getOrders(data) {
+  const url = "/order/getAllOrderByUser";
+  return axios._get(url, data);
+}
+
+function cancelOrder(orderId) {
+  const url = "/order/cancelOrder";
+  return axios.post(url, { orderId });
+}
+
+function getHospital(id) {
+  const url = "/hospital/getHospitalById";
+  return axios._get(url, { id });
+}
+
+function appointment(data) {
+  const url = "/order/makeOrder";
+  return axios.post(url, data);
+}
+
 export {
   login,
   register,
@@ -118,4 +138,8 @@ export {
   getArticle,
   modifyInfo,
   updateAvatar,
+  getOrders,
+  cancelOrder,
+  getHospital,
+  appointment,
 };

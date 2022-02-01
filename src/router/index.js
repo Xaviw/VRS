@@ -35,8 +35,23 @@ const routes = [
         path: "/edit-info",
         component: () => import("views/editInfo.vue"),
         meta: {
-          title: "修改信息",
+          title: "修改资料",
           needLogin: true,
+        },
+      },
+      {
+        path: "/order",
+        component: () => import("views/orderList.vue"),
+        meta: {
+          title: "订单信息",
+          needLogin: true,
+        },
+      },
+      {
+        path: "/hospital/:id",
+        component: () => import("views/hospital.vue"),
+        meta: {
+          title: "医院信息",
         },
       },
     ],

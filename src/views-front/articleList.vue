@@ -148,6 +148,7 @@ ul {
   }
   .footer {
     text-align: center;
+    border-top: 1px solid #ebeef5;
   }
 }
 </style>

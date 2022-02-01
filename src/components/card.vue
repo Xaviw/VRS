@@ -1,5 +1,5 @@
 <template>
-  <div class="card-item">
+  <div class="card-item" @click="$router.push(`/hospital/${item.id}`)">
     <div class="left">
       <span class="name">{{ item.name }}</span>
       <span class="grade"><i class="el-icon-aim" />{{ item.grade }}</span>

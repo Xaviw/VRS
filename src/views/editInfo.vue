@@ -136,9 +136,7 @@ export default {
   },
   methods: {
     handleAvatarSuccess(res, file) {
-      console.log("res, file: ", res, file);
       this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(URL.createObjectURL(file.raw));
     },
     beforeAvatarUpload(file) {
       const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
