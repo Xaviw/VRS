@@ -4,7 +4,7 @@
       :visible="personListVisible"
       :title="title"
       :hospitalId="data.hospitalId"
-      :vaccineSpecId="1"
+      :vaccineSpecId="currentVaccineId"
       @close="personListVisible = false"
     ></AppointmentDialog>
     <span class="name">{{ data.hospitalName }}</span>
@@ -54,23 +54,23 @@
                   prop="date"
                 ></el-table-column>
                 <el-table-column label="操作" width="320">
-                  <template>
+                  <template slot-scope="scope">
                     <el-button
                       size="mini"
                       type="primary"
-                      @click="handleOrder('个人预约')"
+                      @click="handleOrder('个人预约', scope.row.vaccineSpecId)"
                       >个人预约</el-button
                     >
                     <el-button
                       size="mini"
                       type="primary"
-                      @click="handleOrder('家庭预约')"
+                      @click="handleOrder('家庭预约', scope.row.vaccineSpecId)"
                       >家庭预约</el-button
                     >
                     <el-button
                       size="mini"
                       type="primary"
-                      @click="handleOrder('组团预约')"
+                      @click="handleOrder('组团预约', scope.row.vaccineSpecId)"
                       >组团预约</el-button
                     >
                   </template>
@@ -100,9 +100,9 @@
 </template>
 
 <script>
-import { getHospital } from "../apis/apis";
-import { money } from "../utils/util";
-import AppointmentDialog from "../components/appointmentDialog.vue";
+import { getHospital } from "@/apis/apis";
+import { money } from "util/util";
+import AppointmentDialog from "com/appointmentDialog.vue";
 import { Message } from "element-ui";
 
 export default {
@@ -110,7 +110,6 @@ export default {
     getHospital(this.$route.params.id).then((res) => {
       this.data = res.data.data;
       this.list = res.data.data.vaccine;
-      console.log("this.list: ", this.list);
     });
   },
   data() {
@@ -119,11 +118,13 @@ export default {
       list: [],
       personListVisible: false,
       title: "",
+      currentVaccineId: null,
     };
   },
   methods: {
-    handleOrder(type) {
+    handleOrder(type, id) {
       if (this.$store.state.isLogin) {
+        this.currentVaccineId = id;
         this.title = type;
         this.personListVisible = true;
       } else {

@@ -3,8 +3,13 @@
     <CascadeLocation
       :visible="dialogVisible"
       @close="dialogVisible = false"
+      v-if="!$store.state.isBack"
     ></CascadeLocation>
-    <Login v-show="showLogin" @closeLogin="switchLogin(false)"></Login>
+    <Login
+      v-show="showLogin"
+      @closeLogin="switchLogin(false)"
+      v-if="!$store.state.isBack"
+    ></Login>
     <el-header height="70px" class="center header">
       <el-row
         type="flex"
@@ -18,12 +23,19 @@
             type="flex"
             align="middle"
             class="title"
-            @click.native="$router.push('/')"
+            @click.native="
+              $router.push($store.state.isBack ? '/manage/index' : '/')
+            "
           >
-            <img src="../assets/images/防疫.svg" class="ico" />
-            <span>{{ appTitle }}</span>
+            <img src="@/assets/images/防疫.svg" class="ico" />
+            <span>{{
+              $store.state.isBack ? appTitle + "后台" : appTitle
+            }}</span>
           </el-row>
-          <span class="geo" @click="dialogVisible = true"
+          <span
+            class="geo"
+            @click="dialogVisible = true"
+            v-if="!$store.state.isBack"
             ><i class="el-icon-map-location" />{{ geoText }}</span
           >
         </div>
@@ -33,6 +45,7 @@
             type="text"
             class="login"
             @click="switchLogin(true)"
+            v-if="!$store.state.isBack"
             >登录/注册</el-button
           >
           <el-dropdown @command="handleMenu">
@@ -71,10 +84,10 @@
 
 <script>
 import { mapState } from "vuex";
-import { logout } from "../apis/apis";
-import Login from "../components/login.vue";
-import { clearLogin } from "../utils/util";
-import CascadeLocation from "../components/cascadeLocation.vue";
+import { logout } from "@/apis/apis";
+import Login from "com/login.vue";
+import { clearLogin } from "util/util";
+import CascadeLocation from "com/cascadeLocation.vue";
 export default {
   components: { Login, CascadeLocation },
   data() {

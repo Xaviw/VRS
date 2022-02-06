@@ -1,7 +1,6 @@
-import { geo } from "../assets/geo";
+import { geo } from "@/assets/geo";
 
 self.onmessage = function (e) {
-  console.log("worker线程接收到: ", e.data);
   const { type } = e.data;
   switch (type) {
     case "location":

@@ -75,8 +75,8 @@
 <script>
 import { Message } from "element-ui";
 import { pwd, mobilePhone } from "util/regexp";
-import { modifyInfo } from "../apis/apis";
-import { clearLogin } from "../utils/util";
+import { modifyInfo } from "@/apis/apis";
+import { clearLogin } from "util/util";
 export default {
   created() {
     if (this.$store.state.userInfo) {

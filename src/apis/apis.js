@@ -5,6 +5,11 @@ function login(data) {
   const url = "http://localhost:3000/passport/login";
   return axios.post(url, data);
 }
+// FIXME
+function adminLogin(data) {
+  const url = "http://localhost:3000/passport/adminLogin";
+  return axios.post(url, data);
+}
 
 function register(data) {
   const url = "/passport/regist";
@@ -123,8 +128,27 @@ function appointment(data) {
   return axios.post(url, data);
 }
 
+function modifyHospitalInfo(data) {
+  const url = "/hospital/updateHospitalById";
+  return axios.post(url, data);
+}
+
+function deleteVaccine(id) {
+  const url = "/hospital/deleteVaccineById";
+  return axios.post(url, { id });
+}
+function deleteArticle(id) {
+  const url = "/hospital/deleteNewsById";
+  return axios.post(url, { id });
+}
+function modifyArticle(data) {
+  const url = "/news/editNewsById";
+  return axios.post(url, data);
+}
+
 export {
   login,
+  adminLogin,
   register,
   logout,
   checkName,
@@ -142,4 +166,8 @@ export {
   cancelOrder,
   getHospital,
   appointment,
+  modifyHospitalInfo,
+  deleteVaccine,
+  deleteArticle,
+  modifyArticle,
 };

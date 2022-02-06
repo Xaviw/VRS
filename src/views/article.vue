@@ -3,6 +3,10 @@
     <div class="header" @click="$router.push(`/${$route.params.type}`)">
       {{ title }}
     </div>
+    <div class="title">
+      <p>{{ articleTitle }}</p>
+      <p>{{ time }}</p>
+    </div>
     <div class="main">
       <div id="toolbar-container" class="toolbar"></div>
       <div id="text-container" class="text"></div>
@@ -12,8 +16,8 @@
 
 <script>
 import wangEditor from "wangeditor";
-import { getArticle } from "../apis/apis";
-import { getTitle } from "../utils/util";
+import { getArticle } from "@/apis/apis";
+import { getTitle } from "util/util";
 export default {
   created() {
     this.title = getTitle(this.$route.params.type);
@@ -28,11 +32,15 @@ export default {
   data() {
     return {
       editor: null,
+      articleTitle: null,
+      time: null,
     };
   },
   methods: {
     getDetail() {
       getArticle(this.$route.params.id).then((res) => {
+        this.articleTitle = res.data.data.title;
+        this.time = res.data.data.date;
         if (this.editor && res.data.data.content) {
           this.editor.txt.setJSON(res.data.data.content);
         }
@@ -64,6 +72,9 @@ export default {
     &:hover {
       color: #4490f1;
     }
+  }
+  .title {
+    text-align: center;
   }
   .main {
     flex-grow: 1;

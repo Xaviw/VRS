@@ -1,7 +1,7 @@
 <template>
-  <div class="curtain">
+  <div class="curtain center">
     <el-row class="login-box" :gutter="1">
-      <i class="el-icon-close close" @click="close()" />
+      <i class="el-icon-close close" @click="close()" v-show="!isBack" />
       <el-col :span="12" class="form-area center">
         <el-form
           :model="ruleForm"
@@ -31,7 +31,7 @@
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item class="prompt">
+          <el-form-item class="prompt" v-if="!isBack">
             <el-link
               type="primary"
               @click="switchStatus(false)"
@@ -64,7 +64,7 @@
         </el-form>
       </el-col>
       <el-col :span="12" class="info-area">
-        <img src="../assets/images/疫情退散.svg" fit="cover" />
+        <img src="@/assets/images/疫情退散.svg" fit="cover" />
         <span>快速预约 安全放心</span>
       </el-col>
     </el-row>
@@ -73,8 +73,11 @@
 
 <script>
 import { pwd, username } from "util/regexp";
-import { checkName, login, register } from "../apis/apis";
+import { adminLogin, checkName, login, register } from "@/apis/apis";
 export default {
+  created() {
+    this.isBack = this.$route.path.startsWith("/manage");
+  },
   data() {
     const validateName = (rule, value, callback) => {
       if (this.isLoginStatus) {
@@ -111,6 +114,7 @@ export default {
     };
     return {
       isLoginStatus: true,
+      isBack: null,
       ruleForm: {
         username: "",
         password: "",
@@ -144,13 +148,27 @@ export default {
         if (valid) {
           const data = { ...this.ruleForm };
           delete data.confirmPwd;
-          login(data).then(async (res) => {
+          const handleLogin = async (res) => {
             const { data } = res.data;
-            this.$store.commit("modify", { userInfo: data, isLogin: true });
+            this.$store.commit("modify", {
+              userInfo: data,
+              isLogin: true,
+              isBack: this.isBack,
+            });
+            data.isBack = this.isBack;
             const { expires } = await window.cookieStore.get("user");
             window.local.set("info", JSON.stringify(data), expires);
-            this.close();
-          });
+            if (this.isBack) {
+              this.$router.push("/manage/index");
+            } else {
+              this.close();
+            }
+          };
+          if (this.isBack) {
+            adminLogin(data).then(handleLogin);
+          } else {
+            login(data).then(handleLogin);
+          }
         }
       });
     },
@@ -200,9 +218,6 @@ export default {
   right: 0;
   bottom: 0;
   left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background-color: rgba($color: #000000, $alpha: 0.5);
   z-index: 10002;
 }

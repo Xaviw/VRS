@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { geo } from "../assets/geo";
+import { geo } from "@/assets/geo";
 export default {
   props: ["visible", "close"],
   data() {

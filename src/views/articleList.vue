@@ -1,16 +1,44 @@
 <template>
   <div class="container">
-    <div class="header">{{ title }}</div>
+    <div class="header flex-between">
+      <span>{{ title }}</span
+      ><el-button
+        type="primary"
+        size="medium"
+        v-if="$store.state.isBack"
+        @click="$router.push('/manage/publish/' + $route.params.type)"
+        >发布{{ title }}</el-button
+      >
+    </div>
     <div class="main">
       <ul>
-        <li
-          v-for="item of data"
-          :key="item.id"
-          class="item"
-          @click="gotoDetail(item.id)"
-        >
-          <span class="ellipsis-line title">{{ item.title }}</span>
-          <span class="date">{{ item.date }}</span>
+        <li v-for="item of data" :key="item.id" class="item flex-between">
+          <a class="ellipsis-line title" @click="gotoDetail(item.id)">{{
+            item.title
+          }}</a>
+          <span class="date">
+            {{ item.date }}
+            <el-button
+              type="primary"
+              size="small"
+              style="margin-left: 20px"
+              v-if="$store.state.isBack"
+              @click="
+                $router.push('/manage/' + $route.params.type + '/' + item.id)
+              "
+              >编辑</el-button
+            >
+            <el-popconfirm
+              title="确定删除吗？"
+              @confirm="handleDelete(item.id)"
+              style="margin-left: 20px"
+              v-if="$store.state.isBack"
+            >
+              <el-button type="danger" slot="reference" size="small"
+                >删除</el-button
+              >
+            </el-popconfirm>
+          </span>
         </li>
       </ul>
     </div>
@@ -31,8 +59,9 @@
 </template>
 
 <script>
-import { getAllKnowledge, getAllNews, getAllNotice } from "../apis/apis";
-import { getTitle } from "../utils/util";
+import { getAllKnowledge, getAllNews, getAllNotice } from "@/apis/apis";
+import { getTitle } from "util/util";
+import { deleteArticle } from "../apis/apis";
 
 export default {
   created() {
@@ -87,6 +116,11 @@ export default {
         this.$router.push(`/notice/${id}`);
       }
     },
+    handleDelete(id) {
+      deleteArticle(id).then(() => {
+        this.getData();
+      });
+    },
   },
   watch: {
     "$route.params.type": {
@@ -122,10 +156,6 @@ ul {
     overflow: auto;
     padding: 0 10px 10px 10px;
     .item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
       margin-top: 20px;
       font-size: 14px;
       letter-spacing: 1px;
@@ -138,9 +168,9 @@ ul {
       }
       .title {
         margin-right: 20px;
+        cursor: pointer;
       }
       .date {
-        width: 100px;
         color: #999;
         flex-shrink: 0;
       }

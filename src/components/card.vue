@@ -1,5 +1,8 @@
 <template>
-  <div class="card-item" @click="$router.push(`/hospital/${item.id}`)">
+  <div
+    class="card-item flex-between"
+    @click="$router.push(`/hospital/${item.id}`)"
+  >
     <div class="left">
       <span class="name">{{ item.name }}</span>
       <span class="grade"><i class="el-icon-aim" />{{ item.grade }}</span>
@@ -30,9 +33,6 @@ export default {
   padding: 20px;
   cursor: pointer;
   background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   &:hover {
     box-shadow: 0 4px 20px 0 rgb(0 0 0 / 10%);
     .left .name {

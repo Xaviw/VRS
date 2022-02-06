@@ -1,96 +1,67 @@
 <template>
-  <keep-alive>
-    <div>
-      <img src="../assets/images/banner.jpg" class="container banner" />
-      <el-row type="flex" justify="center" style="margin-top: 20px">
-        <el-input
-          :placeholder="placeholder"
-          v-model.trim="searchKey"
-          class="search"
-          @blur="placeholder = '点击输入医院名称'"
-          @focus="placeholder = ''"
-          @keyup.enter.native="handleSearchHospital()"
+  <div>
+    <img src="@/assets/images/banner.jpg" class="container banner" />
+    <el-row type="flex" justify="center" style="margin-top: 20px">
+      <el-input
+        :placeholder="placeholder"
+        v-model.trim="searchKey"
+        class="search"
+        @blur="placeholder = '点击输入医院名称'"
+        @focus="placeholder = ''"
+        @keyup.enter.native="handleSearchHospital()"
+      >
+        <i slot="prefix" class="el-icon-search center"></i>
+        <el-link
+          slot="suffix"
+          type="primary"
+          class="text"
+          @click="handleSearchHospital()"
+          >搜索</el-link
         >
-          <i slot="prefix" class="el-icon-search center"></i>
-          <el-link
-            slot="suffix"
-            type="primary"
-            class="text"
-            @click="handleSearchHospital()"
-            >搜索</el-link
-          >
-        </el-input>
-      </el-row>
-      <div class="container main">
-        <div class="left">
-          <span class="title">{{ hospitalText }}</span>
-          <span class="rank" v-show="!type">等级：</span>
-          <el-radio-group
-            v-show="!type"
-            v-model="grade"
-            @change="handleSearchHospital($event)"
-          >
-            <el-radio-button label="全部"></el-radio-button>
-            <el-radio-button label="三级医院"></el-radio-button>
-            <el-radio-button label="二级医院"></el-radio-button>
-            <el-radio-button label="一级医院"></el-radio-button>
-          </el-radio-group>
-          <div class="list" id="hospitalList" v-show="!type">
-            <Card
-              v-for="item of hospitalList"
-              :key="item.id"
-              :item="item"
-            ></Card>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <AppointmentCard
-            v-for="item of hospitalList"
-            :key="item.id || item.hospitalId"
-            v-show="type"
-            :data="type ? item : []"
-            class="mt-40"
-          ></AppointmentCard>
-          <i id="bottomAnchor"></i>
+      </el-input>
+    </el-row>
+    <div class="container main">
+      <div class="left">
+        <span class="title">{{ hospitalText }}</span>
+        <span class="rank" v-show="!type">等级：</span>
+        <el-radio-group
+          v-show="!type"
+          v-model="grade"
+          @change="handleSearchHospital($event)"
+        >
+          <el-radio-button label="全部"></el-radio-button>
+          <el-radio-button label="三级医院"></el-radio-button>
+          <el-radio-button label="二级医院"></el-radio-button>
+          <el-radio-button label="一级医院"></el-radio-button>
+        </el-radio-group>
+        <div class="list" id="hospitalList" v-show="!type">
+          <Card v-for="item of hospitalList" :key="item.id" :item="item"></Card>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-        <div class="right">
-          <InfoList title="每日新闻" :list="newsList"></InfoList>
-          <InfoList
-            class="mt-40"
-            title="科普常识"
-            :list="knowledgeList"
-          ></InfoList>
-          <InfoList class="mt-40" title="公告" :list="noticeList"></InfoList>
-        </div>
+        <AppointmentCard
+          v-for="item of hospitalList"
+          :key="item.id || item.hospitalId"
+          v-show="type"
+          :data="type ? item : []"
+          class="mt-40"
+          :teamNum="searchKey"
+        ></AppointmentCard>
+        <i id="bottomAnchor"></i>
       </div>
+      <Info></Info>
     </div>
-  </keep-alive>
+  </div>
 </template>
 
 <script>
-import {
-  getDayNews,
-  getTopKnowledge,
-  getTopNotice,
-  searchHospital,
-} from "../apis/apis";
-import Card from "../components/card.vue";
-import InfoList from "../components/infoList.vue";
-import AppointmentCard from "../components/appointmentCard.vue";
+import { searchHospital } from "@/apis/apis";
+import Card from "com/card.vue";
+import AppointmentCard from "com/appointmentCard.vue";
+import Info from "com/info.vue";
 export default {
-  components: { Card, InfoList, AppointmentCard },
-  created() {
-    getDayNews().then((res) => {
-      this.newsList = res.data.data;
-    });
-    getTopKnowledge().then((res) => {
-      this.knowledgeList = res.data.data;
-    });
-    getTopNotice().then((res) => {
-      this.noticeList = res.data.data;
-    });
-  },
+  components: { Card, AppointmentCard, Info },
   mounted() {
     this.observer = new IntersectionObserver(
       (entries) => {
@@ -118,9 +89,6 @@ export default {
       placeholder: "点击输入医院名称",
       hospitalText: "热门医院",
       hospitalList: [],
-      newsList: [],
-      knowledgeList: [],
-      noticeList: [],
       grade: "全部",
       total: null,
       type: 0,
@@ -179,7 +147,7 @@ export default {
   watch: {
     "$store.state.geo": {
       handler: function (newVal) {
-        if (newVal) this.handleSearchHospital();
+        if (newVal) this.handleSearchHospital(true);
       },
     },
   },
@@ -210,9 +178,6 @@ export default {
 }
 .rank {
   color: #999;
-}
-.mt-40 {
-  margin-top: 40px;
 }
 .search {
   max-width: 800px;
@@ -249,13 +214,6 @@ export default {
       flex-wrap: wrap;
       justify-content: space-evenly;
     }
-  }
-  .right {
-    width: 200px;
-    flex-shrink: 0;
-    position: sticky;
-    top: 10px;
-    align-self: flex-start;
   }
 }
 </style>

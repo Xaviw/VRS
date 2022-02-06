@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Message } from "element-ui";
 import qs from "qs";
-import { clearLogin } from "../utils/util";
+import { clearLogin } from "util/util";
 
 const _axios = axios.create({
   baseURL: "/api",
@@ -14,7 +14,6 @@ _axios._get = function (url, data) {
   if (str) {
     url += `?${str}`;
   }
-  console.log("url: ", url);
   return _axios.get(url);
 };
 

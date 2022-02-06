@@ -1,6 +1,6 @@
 import { Message } from "element-ui";
-import router from "../router";
-import store from "../store";
+import router from "@/router";
+import store from "@/store";
 import Worker from "./worker.js";
 
 async function checkLogin() {
@@ -10,9 +10,16 @@ async function checkLogin() {
     Message.warning("登录信息已失效，请重新登录！");
     clearLogin();
   } else if (info && user) {
-    store.commit("modify", { isLogin: true, userInfo: JSON.parse(info) });
+    store.commit("modify", {
+      isLogin: true,
+      userInfo: info,
+      isBack: info.isBack,
+    });
   } else {
-    store.commit("modify", { isLogin: false });
+    store.commit("modify", {
+      isLogin: false,
+      isBack: window.location.pathname.startsWith("/manage"),
+    });
   }
 }
 
@@ -28,14 +35,6 @@ async function gotoIndex() {
     router.app.$router.push("/manage/login");
   } else if (!router.app.$route || router.app.$route.meta.needLogin) {
     router.push("/");
-  }
-}
-
-function checkBack() {
-  if (window.location.pathname.startsWith("/manage")) {
-    store.commit("modify", { isBack: true });
-  } else if (store.state.isBack) {
-    store.commit("modify", { isBack: false });
   }
 }
 
@@ -64,7 +63,6 @@ function location() {
   if (store.state.isBack) return;
   const geoWorker = new Worker();
   geoWorker.onmessage = function (e) {
-    console.log("主线程接收到: ", e.data);
     store.commit("modify", e.data);
     geoWorker.terminate();
   };
@@ -93,13 +91,48 @@ function money(val) {
   return Number(val).toFixed(2).toLocaleString() + "￥";
 }
 
+function standardTime(time) {
+  if (!time) {
+    throw new TypeError();
+  } else if (time instanceof Date) {
+    return time.toLocaleString().replaceAll("/", "-");
+  } else {
+    return new Date(time).toLocaleString().replaceAll("/", "-");
+  }
+}
+
+function deepClone(value) {
+  let map = new Map();
+
+  function main(value) {
+    if (value === null || typeof value !== "object") {
+      return value;
+    }
+    if (map.get(value)) {
+      return map.get(value);
+    }
+    let result = Array.isArray(value) ? [] : {};
+    map.set(value, result);
+    for (let key in value) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (value.hasOwnProperty(key)) {
+        result[key] = main(value[key]);
+      }
+    }
+    return result;
+  }
+
+  return main(value);
+}
+
 export {
   checkLogin,
   clearLogin,
-  checkBack,
   getPosition,
   location,
   getTitle,
   gotoIndex,
   money,
+  standardTime,
+  deepClone,
 };

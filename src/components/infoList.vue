@@ -1,6 +1,6 @@
 <template>
   <div class="list-item">
-    <div class="header">
+    <div class="header flex-between">
       <slot></slot>
       <span class="title">{{ title }}</span>
       <span class="all" @click="gotoAll()"
@@ -48,9 +48,6 @@ export default {
 <style lang="scss" scoped>
 .list-item {
   .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     .title {
       letter-spacing: 1px;
       font-weight: 700;

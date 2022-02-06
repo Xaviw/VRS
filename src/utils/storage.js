@@ -25,7 +25,7 @@ const local = {
         localStorage.removeItem(key);
         return;
       } else {
-        return res.value;
+        return JSON.parse(res.value);
       }
     } else {
       return res;

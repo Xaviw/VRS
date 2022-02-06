@@ -46,14 +46,14 @@
           ></el-input>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="90" v-show="canAdd">
+      <el-table-column label="操作" width="90" v-if="canAdd">
         <template slot-scope="scope">
           <el-button
             type="danger"
             size="mini"
             @click="handleDeletePerson(scope.row.id)"
             >删除</el-button
-          >
+          >{{ canAdd }}
         </template>
       </el-table-column>
     </el-table>
@@ -65,17 +65,30 @@
 </template>
 
 <script>
+import { Message } from "element-ui";
+import { appointment } from "@/apis/apis";
+import { standardTime } from "util/util";
+
 export default {
-  props: ["title", "visible", "close", "hospitalId"],
+  props: [
+    "title",
+    "visible",
+    "close",
+    "hospitalId",
+    "vaccineSpecId",
+    "teamNum",
+  ],
   created() {
-    const { name, sex, mobile } = this.$store.state.userInfo;
-    this.personList[0] = this.basicPerson = {
-      name,
-      sex,
-      age: null,
-      mobile,
-      id: this.personId++,
-    };
+    if (this.$store.state.isLogin) {
+      const { name, sex, mobile } = this.$store.state.userInfo;
+      this.personList[0] = this.basicPerson = {
+        name,
+        sex,
+        age: null,
+        mobile,
+        id: this.personId++,
+      };
+    }
   },
   data() {
     return {
@@ -101,29 +114,49 @@ export default {
       this.personList.splice(index, 1);
     },
     handleOrder() {
-      // const param = {
-      //   hospitalId: this.hospitalId,
-      //   createId: this.$store.state.userInfo.userId,
-      //   date: this.time,
-      //   vaccineSpecId: vId,
-      //   isTeam,
-      //   userInfo: [
-      //     //打针人信息    个人预约就只有自己的   ，信息难得保存，每次都重新填写。
-      //     {
-      //       name: "旺旺",
-      //       sex: 0,
-      //       age: 19,
-      //       mobile: "138876655637",
-      //     },
-      //     {
-      //       name: "张三",
-      //       sex: 0,
-      //       age: 19,
-      //       mobile: "138876655637",
-      //     },
-      //   ],
-      // };
-      // appointment().then(() => {});
+      if (!this.time) {
+        Message.warning("请选择预约时间！");
+        return;
+      }
+      if (
+        this.personList.some((item) => {
+          let values = Object.values(item);
+          if (values.includes(null) || values.includes("")) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+      ) {
+        Message.warning("请将预约信息补充完整！");
+        return;
+      }
+      const param = {
+        hospitalId: this.hospitalId,
+        createId: this.$store.state.userInfo.userId,
+        date: standardTime(this.time),
+        vaccineSpecId: this.vaccineSpecId,
+        isTeam: this.title === "组团预约",
+        userInfo: this.personList.map((item) => ({
+          name: item.name,
+          sex: item.sex,
+          age: item.age,
+          mobile: item.mobile,
+        })),
+      };
+      if (this.teamNum) {
+        param.teamNum = this.teamNum;
+      }
+      appointment(param).then((res) => {
+        this.$emit("close");
+        if (param.isTeam && res.data.data) {
+          this.$notify({
+            title: "预约成功",
+            message: `您的组团号是：${res.data.data}，关闭后可在右上角订单管理中查看`,
+            duration: 0,
+          });
+        }
+      });
     },
   },
   watch: {
@@ -144,9 +177,6 @@ export default {
 
 <style lang="scss" scoped>
 .flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-bottom: 10px;
 }
 </style>

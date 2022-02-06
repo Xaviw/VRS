@@ -8,7 +8,7 @@ import router from "./router";
 import store from "./store";
 import axios from "./apis";
 import "./styles/common.scss";
-import { checkBack, checkLogin, location } from "./utils/util";
+import { checkLogin, location } from "./utils/util";
 import { local } from "./utils/storage";
 
 Vue.use(ElementUI);
@@ -16,12 +16,11 @@ Vue.config.productionTip = false;
 window.local = local;
 Vue.prototype.$http = axios;
 
-checkBack();
-checkLogin();
-location();
-
-new Vue({
-  router,
-  store,
-  render: (h) => h(App),
-}).$mount("#app");
+checkLogin().then(() => {
+  location();
+  new Vue({
+    router,
+    store,
+    render: (h) => h(App),
+  }).$mount("#app");
+});

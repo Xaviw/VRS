@@ -26,8 +26,8 @@ module.exports = {
         util: "@/utils",
         com: "@/components",
         views: "@/views",
-        back: "@/views-back",
-        front: "@/views-front",
+        back: "@/views/manage",
+        front: "@/views/client",
       },
     },
     devServer: {

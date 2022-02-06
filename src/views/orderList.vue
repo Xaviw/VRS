@@ -15,7 +15,7 @@
       <el-table :data="dataList">
         <el-table-column label="序号" width="50" type="index"></el-table-column>
         <el-table-column prop="vaccineName" label="疫苗名称"></el-table-column>
-        <el-table-column label="价格" width="80">
+        <el-table-column label="价格" width="100">
           <template slot-scope="scope">{{ scope.row.price | money }}</template>
         </el-table-column>
         <el-table-column prop="hospitalName" label="预约医院"></el-table-column>
@@ -35,6 +35,11 @@
                 ? "------"
                 : scope.row.userInfo.map((item) => item.userName).join("，")
             }}
+          </template>
+        </el-table-column>
+        <el-table-column label="组团号" width="100px">
+          <template slot-scope="scope">
+            {{ scope.row.isTeam ? scope.row.teamNum : "------" }}
           </template>
         </el-table-column>
         <el-table-column label="操作" width="100px">
@@ -66,8 +71,8 @@
 </template>
 
 <script>
-import { cancelOrder, getOrders } from "../apis/apis";
-import { money } from "../utils/util";
+import { cancelOrder, getOrders } from "@/apis/apis";
+import { money } from "util/util";
 export default {
   created() {
     this.getPageData();
