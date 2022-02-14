@@ -68,9 +68,15 @@ export default {
         Message.warning("请输入内容");
         return;
       }
+      let type = {
+        news: 0,
+        knowledge: 1,
+        notice: 2,
+      };
       const param = {
-        title: this.title,
+        title: this.articleTitle,
         content: JSON.stringify(this.editor.txt.getJSON()),
+        type: type[this.$route.params.type],
       };
       if (this.$route.params.id) {
         param.newsId = this.$route.params.id;
@@ -83,7 +89,7 @@ export default {
       getArticle(this.$route.params.id).then((res) => {
         this.articleTitle = res.data.data.title;
         if (this.editor && res.data.data.content) {
-          this.editor.txt.setJSON(res.data.data.content);
+          this.editor.txt.setJSON(JSON.parse(res.data.data.content));
         }
       });
     },
@@ -96,7 +102,7 @@ export default {
     },
     "$route.params.id": {
       handler: function () {
-        this.title = this.getDetail();
+        this.getDetail();
       },
     },
   },

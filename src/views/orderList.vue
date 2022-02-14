@@ -23,8 +23,10 @@
           <template slot-scope="scope"
             >{{
               scope.row.isTeam
-                ? scope.row.status
-                : `${scope.row.status}（${scope.row.teamStatus}）`
+                ? `${scope.row.status}${
+                    scope.row.teamStatus ? "(" + scope.row.teamStatus + ")" : ""
+                  }`
+                : scope.row.status
             }}
           </template>
         </el-table-column>
@@ -32,8 +34,8 @@
           <template slot-scope="scope"
             >{{
               scope.row.isTeam
-                ? "------"
-                : scope.row.userInfo.map((item) => item.userName).join("，")
+                ? scope.row.userInfo.map((item) => item.userName).join("，")
+                : "------"
             }}
           </template>
         </el-table-column>
@@ -42,12 +44,17 @@
             {{ scope.row.isTeam ? scope.row.teamNum : "------" }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100px">
+        <el-table-column
+          label="操作"
+          width="100px"
+          v-if="!['已完成', '已取消'].includes(status)"
+        >
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="danger"
               @click="handleCancel(scope.row.orderId)"
+              v-show="!['已完成', '已取消'].includes(scope.row.status)"
               >取消预约</el-button
             >
           </template>

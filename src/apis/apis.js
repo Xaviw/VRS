@@ -1,13 +1,15 @@
 import axios from "./index";
 
-// FIXME
 function login(data) {
-  const url = "http://localhost:3000/passport/login";
+  const url = process.env.VUE_APP_MOCK
+    ? "http://localhost:3000/passport/login"
+    : "/passport/login";
   return axios.post(url, data);
 }
-// FIXME
 function adminLogin(data) {
-  const url = "http://localhost:3000/passport/adminLogin";
+  const url = process.env.VUE_APP_MOCK
+    ? "http://localhost:3000/passport/adminLogin"
+    : "/passport/adminLogin";
   return axios.post(url, data);
 }
 
@@ -28,8 +30,7 @@ function checkName(name) {
 
 function searchHospital(data) {
   const url = "/hospital/searchHospital";
-  // FIXME
-  if (/\d+/.test(data.keyword)) {
+  if (process.env.VUE_APP_MOCK && /\d+/.test(data.keyword)) {
     return Promise.resolve({
       data: {
         status: 0,
@@ -133,6 +134,11 @@ function modifyHospitalInfo(data) {
   return axios.post(url, data);
 }
 
+function modifyVaccineInfo(data) {
+  const url = "/hospital/updateVaccineById";
+  return axios.post(url, data);
+}
+
 function deleteVaccine(id) {
   const url = "/hospital/deleteVaccineById";
   return axios.post(url, { id });
@@ -167,6 +173,7 @@ export {
   getHospital,
   appointment,
   modifyHospitalInfo,
+  modifyVaccineInfo,
   deleteVaccine,
   deleteArticle,
   modifyArticle,

@@ -2,7 +2,7 @@
   <div class="container">
     <el-upload
       class="avatar-uploader"
-      action="/api/info/editFace"
+      action="/info/editFace"
       :data="{ userId: $store.state.userInfo.userId }"
       :multiple="false"
       :show-file-list="false"

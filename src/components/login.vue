@@ -176,10 +176,7 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           register(this.ruleForm).then(() => {
-            this.ruleForm.password = this.ruleForm.confirmPwd = "";
-            this.$refs.ruleForm.clearValidate("password");
-            this.$refs.ruleForm.clearValidate("confirmPwd");
-            this.isLoginStatus = true;
+            this.switchStatus(true);
           });
         }
       });

@@ -42,7 +42,7 @@ export default {
         this.articleTitle = res.data.data.title;
         this.time = res.data.data.date;
         if (this.editor && res.data.data.content) {
-          this.editor.txt.setJSON(res.data.data.content);
+          this.editor.txt.setJSON(JSON.parse(res.data.data.content));
         }
       });
     },

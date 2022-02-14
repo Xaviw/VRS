@@ -4,7 +4,7 @@ import qs from "qs";
 import { clearLogin } from "util/util";
 
 const _axios = axios.create({
-  baseURL: "/api",
+  baseURL: process.env.NODE_ENV === "production" ? "" : "/api",
   timeout: 60 * 1000,
   withCredentials: true,
 });

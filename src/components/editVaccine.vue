@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { modifyHospitalInfo } from "@/apis/apis";
+import { modifyVaccineInfo } from "@/apis/apis";
 
 export default {
   props: ["visible", "close", "data", "refresh"],
@@ -80,11 +80,12 @@ export default {
   methods: {
     handleEdit() {
       this.data.specInfo.forEach((item) => {
-        if (item.vaccineSpecId instanceof Symbol) {
-          item.vaccineSpecId = null;
+        delete item.vaccineSpecId;
+        if (typeof item.price !== "number") {
+          item.price = Number(item.price);
         }
       });
-      modifyHospitalInfo(this.data).then(() => {
+      modifyVaccineInfo(this.data).then(() => {
         this.$emit("close");
         this.$emit("refresh");
       });

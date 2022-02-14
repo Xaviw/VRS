@@ -95,7 +95,7 @@ const manageRoutes = [
   "/knowledge",
   "/notice",
   "/order",
-  "/editInfo",
+  "/edit-info",
 ];
 
 router.beforeEach(async (to, from, next) => {

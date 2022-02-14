@@ -6,6 +6,7 @@
       :hospitalId="data.hospitalId"
       :vaccineSpecId="currentVaccineId"
       @close="personListVisible = false"
+      @refresh="handleGetInfo"
     ></AppointmentDialog>
     <span class="name">{{ data.hospitalName }}</span>
     <span class="grade">{{ data.grade }}</span>
@@ -107,10 +108,7 @@ import { Message } from "element-ui";
 
 export default {
   created() {
-    getHospital(this.$route.params.id).then((res) => {
-      this.data = res.data.data;
-      this.list = res.data.data.vaccine;
-    });
+    this.handleGetInfo();
   },
   data() {
     return {
@@ -122,6 +120,12 @@ export default {
     };
   },
   methods: {
+    handleGetInfo() {
+      getHospital(this.$route.params.id).then((res) => {
+        this.data = res.data.data;
+        this.list = res.data.data.vaccine;
+      });
+    },
     handleOrder(type, id) {
       if (this.$store.state.isLogin) {
         this.currentVaccineId = id;

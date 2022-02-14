@@ -53,7 +53,7 @@
             size="mini"
             @click="handleDeletePerson(scope.row.id)"
             >删除</el-button
-          >{{ canAdd }}
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -74,6 +74,7 @@ export default {
     "title",
     "visible",
     "close",
+    "refresh",
     "hospitalId",
     "vaccineSpecId",
     "teamNum",
@@ -149,6 +150,7 @@ export default {
       }
       appointment(param).then((res) => {
         this.$emit("close");
+        this.$emit("refresh");
         if (param.isTeam && res.data.data) {
           this.$notify({
             title: "预约成功",
