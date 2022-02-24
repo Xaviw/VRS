@@ -7,7 +7,7 @@
     :close-on-press-escape="false"
     top="0"
   >
-    <el-form ref="form" :model="data" label-width="80px">
+    <el-form ref="form" :model="data" label-width="120px">
       <el-form-item label="疫苗名称">
         <el-input v-model="data.vaccineName"></el-input>
       </el-form-item>
@@ -20,6 +20,14 @@
       <el-form-item label="注意事项">
         <el-input type="textarea" v-model="data.notes"></el-input>
       </el-form-item>
+      <el-form-item label="是否可组团" style="text-align: left">
+        <el-switch
+          v-model="data.isGroup"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+        >
+        </el-switch>
+      </el-form-item>
     </el-form>
     <el-table :data="data.specInfo" :stripe="true">
       <el-table-column label="规格">
@@ -30,22 +38,6 @@
       <el-table-column label="价格">
         <template slot-scope="scope">
           <el-input type="number" v-model="scope.row.price"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column label="库存">
-        <template slot-scope="scope">
-          <el-input type="number" v-model="scope.row.inventory"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column label="预约开始时间" width="203">
-        <template slot-scope="scope">
-          <el-date-picker
-            v-model="scope.row.date"
-            type="datetime"
-            placeholder="选择日期时间"
-            style="width: 193px"
-          >
-          </el-date-picker>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="90">
@@ -80,11 +72,17 @@ export default {
   methods: {
     handleEdit() {
       this.data.specInfo.forEach((item) => {
-        delete item.vaccineSpecId;
+        if (!item.vaccineSpecId || typeof item.vaccineSpecId == "symbol") {
+          delete item.vaccineSpecId;
+        }
         if (typeof item.price !== "number") {
           item.price = Number(item.price);
         }
       });
+      this.data.isGroup = +this.data.isGroup;
+      if (!this.data.vaccineId) {
+        delete this.data.vaccineId;
+      }
       modifyVaccineInfo(this.data).then(() => {
         this.$emit("close");
         this.$emit("refresh");
@@ -100,8 +98,6 @@ export default {
         vaccineSpecId: Symbol(),
         spec: null,
         price: null,
-        inventory: null,
-        date: null,
       });
     },
   },

@@ -54,6 +54,13 @@ const routes = [
           title: "医院信息",
         },
       },
+      {
+        path: "/vaccine/:id",
+        component: () => import("front/vaccine.vue"),
+        meta: {
+          title: "疫苗信息",
+        },
+      },
     ],
   },
   {

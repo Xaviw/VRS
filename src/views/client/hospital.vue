@@ -72,6 +72,7 @@
                       size="mini"
                       type="primary"
                       @click="handleOrder('组团预约', scope.row.vaccineSpecId)"
+                      v-if="props.row.isGroup"
                       >组团预约</el-button
                     >
                   </template>
@@ -95,6 +96,15 @@
           <el-table-column prop="ban" label="禁用人群"></el-table-column>
           <el-table-column label="注意事项" prop="notes"></el-table-column>
         </el-table>
+        <p>组团信息</p>
+        <AppointmentCard
+          v-for="item of groupInfo"
+          :key="item.id || item.hospitalId"
+          :data="item"
+          class="mb-40"
+          :teamNum="item.teamNum"
+          :isGroupInfo="true"
+        ></AppointmentCard>
       </div>
     </div>
   </div>
@@ -104,6 +114,7 @@
 import { getHospital } from "@/apis/apis";
 import { money } from "util/util";
 import AppointmentDialog from "com/appointmentDialog.vue";
+import AppointmentCard from "com/appointmentCard.vue";
 import { Message } from "element-ui";
 
 export default {
@@ -114,6 +125,7 @@ export default {
     return {
       data: {},
       list: [],
+      groupInfo: [],
       personListVisible: false,
       title: "",
       currentVaccineId: null,
@@ -124,6 +136,7 @@ export default {
       getHospital(this.$route.params.id).then((res) => {
         this.data = res.data.data;
         this.list = res.data.data.vaccine;
+        this.groupInfo = res.data.data.groupInfo;
       });
     },
     handleOrder(type, id) {
@@ -137,7 +150,7 @@ export default {
     },
   },
   filters: { money },
-  components: { AppointmentDialog },
+  components: { AppointmentDialog, AppointmentCard },
 };
 </script>
 

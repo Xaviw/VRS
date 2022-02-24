@@ -1,5 +1,10 @@
 <template>
-  <el-dialog title="选择地区" :visible.sync="visible" :show-close="false">
+  <el-dialog
+    title="选择地区"
+    :visible.sync="visible"
+    :show-close="false"
+    append-to-body
+  >
     <el-cascader-panel
       :options="options"
       :props="props"
@@ -16,7 +21,7 @@
 <script>
 import { geo } from "@/assets/geo";
 export default {
-  props: ["visible", "close"],
+  props: ["visible", "close", "modify", "isModify"],
   data() {
     return {
       options: geo,
@@ -29,6 +34,10 @@ export default {
   },
   methods: {
     handleAreaChange() {
+      if (this.isModify) {
+        this.$emit("modify", this.area.join(" "));
+        return;
+      }
       this.$store.commit("modify", {
         geoText: this.area.join(" "),
         geo: this.area[this.area.length - 1],

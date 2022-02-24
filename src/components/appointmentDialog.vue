@@ -1,7 +1,12 @@
 <template>
   <el-dialog :title="title" :visible.sync="visible" :show-close="false">
     <div class="flex-between">
-      <el-date-picker v-model="time" type="datetime" placeholder="选择预约时间">
+      <el-date-picker
+        v-model="time"
+        type="datetime"
+        placeholder="选择预约时间"
+        :disabled="refuseCheckTime"
+      >
       </el-date-picker>
       <el-button type="primary" @click="handleAddPerson" v-show="canAdd"
         >添加人员</el-button
@@ -10,7 +15,7 @@
     <el-table :data="personList">
       <el-table-column label="姓名">
         <template slot-scope="scope">
-          <el-input size="mini" v-model="scope.row.name"></el-input>
+          <el-input size="mini" v-model.lazy.trim="scope.row.name"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="性别" width="90">
@@ -30,9 +35,9 @@
         <template slot-scope="scope">
           <el-input
             size="mini"
-            v-model="scope.row.age"
+            v-model.lazy.trim="scope.row.age"
             :maxlength="3"
-            oninput="value=value.replace(/[^\d]/g, '')"
+            @input="scope.row.age = scope.row.age.replace(/[^\d]/g, '')"
           ></el-input>
         </template>
       </el-table-column>
@@ -40,9 +45,9 @@
         <template slot-scope="scope">
           <el-input
             size="mini"
-            v-model="scope.row.mobile"
+            v-model.lazy.trim="scope.row.mobile"
             :maxlength="11"
-            oninput="value=value.replace(/[^\d]/g, '')"
+            @input="scope.row.mobile = scope.row.mobile.replace(/[^\d]/g, '')"
           ></el-input>
         </template>
       </el-table-column>
@@ -78,6 +83,7 @@ export default {
     "hospitalId",
     "vaccineSpecId",
     "teamNum",
+    "date",
   ],
   created() {
     if (this.$store.state.isLogin) {
@@ -94,6 +100,7 @@ export default {
   data() {
     return {
       time: "",
+      refuseCheckTime: false,
       personId: 0,
       basicPerson: null,
       canAdd: false,
@@ -141,7 +148,7 @@ export default {
         userInfo: this.personList.map((item) => ({
           name: item.name,
           sex: item.sex,
-          age: item.age,
+          age: Number(item.age),
           mobile: item.mobile,
         })),
       };
@@ -163,6 +170,14 @@ export default {
   },
   watch: {
     visible: function (newVal) {
+      if (newVal) {
+        if (this.date) {
+          this.time = new Date(this.date);
+          this.refuseCheckTime = true;
+        }
+      } else {
+        this.refuseCheckTime = false;
+      }
       if (newVal && this.title === "家庭预约") {
         this.canAdd = true;
         if (!this.personList.length || this.personList[0].id !== 0) {

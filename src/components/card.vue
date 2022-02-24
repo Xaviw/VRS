@@ -1,11 +1,12 @@
 <template>
-  <div
-    class="card-item flex-between"
-    @click="$router.push(`/hospital/${item.id}`)"
-  >
+  <div class="card-item flex-between" @click="gotoDetail">
     <div class="left">
       <span class="name">{{ item.name }}</span>
-      <span class="grade"><i class="el-icon-aim" />{{ item.grade }}</span>
+      <span class="grade ellipsis-line"
+        ><i class="el-icon-aim" />{{
+          type == "医院信息" ? item.grade : item.brief
+        }}</span
+      >
     </div>
     <img class="right" :src="item.logo" />
   </div>
@@ -16,7 +17,16 @@ export default {
   data() {
     return {};
   },
-  props: ["item"],
+  props: ["item", "type"],
+  methods: {
+    gotoDetail() {
+      if (this.type == "医院信息") {
+        this.$router.push(`/hospital/${this.item.id}`);
+      } else {
+        this.$router.push(`/vaccine/${this.item.id}`);
+      }
+    },
+  },
 };
 </script>
 
@@ -43,6 +53,7 @@ export default {
   .left {
     height: 100%;
     display: flex;
+    min-width: 0;
     flex-direction: column;
     justify-content: space-between;
     .name {
