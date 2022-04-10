@@ -148,7 +148,7 @@ function cancelOrder(orderId) {
 }
 
 function getHospital(id) {
-  const url = '/hospital/getHospitalById2';
+  const url = '/hospital/getHospitalById';
   return axios._get(url, { id });
 }
 
