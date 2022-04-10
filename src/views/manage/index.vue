@@ -4,18 +4,14 @@
 </template>
 
 <script>
-import Hospital from "./hospital.vue";
-import Manage from "./manage.vue";
-export default {
-  computed: {
-    isSuper() {
-      console.log(
-        "this.$store.state.userInfo.isSuper: ",
-        this.$store.state.userInfo.isSuper
-      );
-      return this.$store.state.userInfo.isSuper;
+  import Hospital from './hospital.vue';
+  import Manage from './manage.vue';
+  export default {
+    computed: {
+      isSuper() {
+        return this.$store.state.userInfo.isSuper;
+      },
     },
-  },
-  components: { Hospital, Manage },
-};
+    components: { Hospital, Manage },
+  };
 </script>

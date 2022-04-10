@@ -1,8 +1,8 @@
-import { Message } from "element-ui";
-import Vue from "vue";
-import VueRouter from "vue-router";
-import store from "@/store";
-import { checkLogin, getTitle, gotoIndex } from "util/util";
+import { Message } from 'element-ui';
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import store from '@/store';
+import { checkLogin, getTitle, gotoIndex } from 'util/util';
 
 Vue.use(VueRouter);
 
@@ -13,80 +13,87 @@ const articleTitle = (to, from, next) => {
 
 const routes = [
   {
-    path: "",
-    component: () => import("views/basic.vue"),
+    path: '',
+    component: () => import('views/basic.vue'),
     children: [
       {
-        path: "",
-        component: () => import("front/index.vue"),
-        meta: { title: "首页" },
+        path: '',
+        component: () => import('front/index.vue'),
+        meta: { title: '首页' },
       },
       {
-        path: "/:type(news|knowledge|notice)",
-        component: () => import("views/articleList.vue"),
+        path: '/:type(news|knowledge|notice)',
+        component: () => import('views/articleList.vue'),
         beforeEnter: articleTitle,
       },
       {
-        path: "/:type(news|knowledge|notice)/:id",
-        component: () => import("views/article.vue"),
+        path: '/:type(news|knowledge|notice)/:id',
+        component: () => import('views/article.vue'),
         beforeEnter: articleTitle,
       },
       {
-        path: "/edit-info",
-        component: () => import("views/editInfo.vue"),
+        path: '/edit-info',
+        component: () => import('views/editInfo.vue'),
         meta: {
-          title: "修改资料",
+          title: '修改资料',
           needLogin: true,
         },
       },
       {
-        path: "/order",
-        component: () => import("views/orderList.vue"),
+        path: '/order',
+        component: () => import('views/orderList.vue'),
         meta: {
-          title: "订单信息",
+          title: '订单信息',
           needLogin: true,
         },
       },
       {
-        path: "/hospital/:id",
-        component: () => import("front/hospital.vue"),
+        path: '/hospital/:id',
+        component: () => import('front/hospital.vue'),
         meta: {
-          title: "医院信息",
+          title: '医院信息',
         },
       },
       {
-        path: "/vaccine/:id",
-        component: () => import("front/vaccine.vue"),
+        path: '/vaccine/:id',
+        component: () => import('front/vaccine.vue'),
         meta: {
-          title: "疫苗信息",
+          title: '疫苗信息',
+        },
+      },
+      {
+        path: 'pay',
+        component: () => import('views/pay.vue'),
+        meta: {
+          title: '支付',
         },
       },
     ],
   },
   {
-    path: "/manage",
-    component: () => import("views/basic.vue"),
-    redirect: "/manage/login",
+    path: '/manage',
+    component: () => import('views/basic.vue'),
+    redirect: '/manage/login',
     children: [
       {
-        path: "login",
-        component: () => import("com/login.vue"),
-        meta: { title: "后台登录" },
+        path: 'login',
+        component: () => import('com/login.vue'),
+        meta: { title: '后台登录' },
       },
       {
-        path: "index",
-        component: () => import("back/index.vue"),
-        meta: { title: "后台首页", needLogin: true },
+        path: 'index',
+        component: () => import('back/index.vue'),
+        meta: { title: '后台首页', needLogin: true },
       },
       {
-        path: "publish/:type(news|knowledge|notice)",
-        component: () => import("back/publishArticle.vue"),
-        meta: { title: "发布", needLogin: true },
+        path: 'publish/:type(news|knowledge|notice)',
+        component: () => import('back/publishArticle.vue'),
+        meta: { title: '发布', needLogin: true },
       },
       {
-        path: ":type(news|knowledge|notice)/:id",
-        component: () => import("back/publishArticle.vue"),
-        meta: { title: "编辑", needLogin: true },
+        path: ':type(news|knowledge|notice)/:id',
+        component: () => import('back/publishArticle.vue'),
+        meta: { title: '编辑', needLogin: true },
       },
     ],
   },
@@ -96,33 +103,25 @@ const router = new VueRouter({
   routes,
 });
 
-const manageRoutes = [
-  "/manage",
-  "/news",
-  "/knowledge",
-  "/notice",
-  "/order",
-  "/edit-info",
-];
+const manageRoutes = ['/manage', '/news', '/knowledge', '/notice', '/order', '/edit-info'];
 
 router.beforeEach(async (to, from, next) => {
   if (store.state.isLogin === null) {
     await checkLogin();
   }
   if (to.meta.needLogin && !store.state.isLogin) {
-    Message.warning("请登录后再访问该页面！");
+    Message.warning('请登录后再访问该页面！');
     gotoIndex();
     return;
   }
-  if (to.path == "/manage/login" && store.state.isLogin) {
-    router.replace("/manage/index");
+  if (to.path == '/manage/login' && store.state.isLogin) {
+    router.replace('/manage/index');
     return;
   }
   if (
     store.state.isLogin &&
-    ((store.state.isBack &&
-      !manageRoutes.some((item) => to.path.startsWith(item))) ||
-      (!store.state.isBack && to.path.startsWith("/manage")))
+    ((store.state.isBack && !manageRoutes.some(item => to.path.startsWith(item))) ||
+      (!store.state.isBack && to.path.startsWith('/manage')))
   ) {
     gotoIndex();
     return;

@@ -49,6 +49,19 @@ body {
   height: 100%;
 }
 
+.title-block {
+  position: relative;
+  padding-left: 15px;
+  &::before {
+    content: '';
+    width: 5px;
+    height: 1.3em;
+    background-color: #1890ff;
+    left: 0px;
+    position: absolute;
+  }
+}
+
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar {
   width: 7px;
@@ -66,4 +79,19 @@ body {
 ::-webkit-scrollbar-thumb {
   border-radius: 5px;
   background-color: rgba(144, 147, 153, 0.3);
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ellipsis-2 {
+  word-break: break-all;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; //控制行数
+  -webkit-box-orient: vertical;
 }
